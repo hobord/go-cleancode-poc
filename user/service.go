@@ -20,7 +20,7 @@ type userService struct {
 }
 
 // NewUserService will create an implementation of user.Service
-func NewUserService(repository *Repository) *Service {
+func NewUserService(repository *Repository) Service {
 	return &userService{
 		Repository: repository,
 	}
