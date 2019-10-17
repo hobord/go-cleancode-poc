@@ -28,21 +28,57 @@ func (m *mysqlUserRepo) getOne(ctx context.Context, query string, args ...interf
 		return nil, err
 	}
 	row := stmt.QueryRowContext(ctx, args...)
-	a := &models.User{}
+	user := &models.User{}
 
 	err = row.Scan(
-		&a.ID,
-		&a.Email,
-		&a.Password,
-		&a.Name,
-		&a.CreatedAt,
-		&a.UpdatedAt,
+		&user.ID,
+		&user.Email,
+		&user.Password,
+		&user.Name,
+		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	return a, nil
+	return user, nil
+}
+
+func (m *mysqlUserRepo) getMultiple(ctx context.Context, query string, args ...interface{}) ([]*models.User, error) {
+	users := make([]*models.User, 1)
+	stmt, err := m.DB.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := stmt.QueryContext(ctx, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		user := &models.User{}
+		err := rows.Scan(
+			&user.ID,
+			&user.Email,
+			&user.Password,
+			&user.Name,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 func (m *mysqlUserRepo) GetByID(ctx context.Context, id string) (*models.User, error) {
@@ -51,7 +87,11 @@ func (m *mysqlUserRepo) GetByID(ctx context.Context, id string) (*models.User, e
 }
 
 func (m *mysqlUserRepo) List(ctx context.Context, listOptions models.ListOptions) ([]*models.User, error) {
-	return nil, nil
+	query := `SELECT id, email, password, name, created_at, updated_at FROM user`
+
+	query = query + listOptions.MysqlQueryStr()
+
+	return m.getMultiple(ctx, query)
 }
 
 func (m *mysqlUserRepo) Create(ctx context.Context, user models.User) (*models.User, error) {
