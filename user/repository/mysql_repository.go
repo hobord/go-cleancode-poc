@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/sirupsen/logrus"
+	uuid "github.com/google/uuid"
 
 	"github.com/hobord/go-cleancode-poc/models"
 	"github.com/hobord/go-cleancode-poc/user"
@@ -25,7 +25,6 @@ func (m *mysqlUserRepo) getOne(ctx context.Context, query string, args ...interf
 
 	stmt, err := m.DB.PrepareContext(ctx, query)
 	if err != nil {
-		logrus.Error(err)
 		return nil, err
 	}
 	row := stmt.QueryRowContext(ctx, args...)
@@ -40,7 +39,6 @@ func (m *mysqlUserRepo) getOne(ctx context.Context, query string, args ...interf
 		&a.UpdatedAt,
 	)
 	if err != nil {
-		logrus.Error(err)
 		return nil, err
 	}
 
@@ -57,6 +55,7 @@ func (m *mysqlUserRepo) List(ctx context.Context, listOptions models.ListOptions
 }
 
 func (m *mysqlUserRepo) Create(ctx context.Context, user models.User) (*models.User, error) {
+	user.ID = uuid.New().String()
 	return nil, nil
 }
 
@@ -64,6 +63,6 @@ func (m *mysqlUserRepo) Update(ctx context.Context, user models.User) (*models.U
 	return nil, nil
 }
 
-func (m *mysqlUserRepo) Delete(ctx context.Context, user models.User) error {
+func (m *mysqlUserRepo) Delete(ctx context.Context, id string) error {
 	return nil
 }
