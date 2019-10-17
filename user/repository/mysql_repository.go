@@ -64,6 +64,6 @@ func (m *mysqlUserRepo) Update(ctx context.Context, user models.User) (*models.U
 	return nil, nil
 }
 
-func (m *mysqlUserRepo) Delete(ctx context.Context, id string) error {
+func (m *mysqlUserRepo) Delete(ctx context.Context, user models.User) error {
 	return nil
 }
