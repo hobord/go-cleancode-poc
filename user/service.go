@@ -6,7 +6,7 @@ import (
 	"github.com/hobord/go-cleancode-poc/models"
 )
 
-// Service represent the user's service contract
+// Service represent the user's (usecases) service contract
 type Service interface {
 	GetByID(ctx context.Context, id string) (*models.User, error)
 	List(ctx context.Context, listOptions models.ListOptions) ([]*models.User, error)

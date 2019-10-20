@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/hobord/go-cleancode-poc/user/repository"
 )
@@ -17,10 +17,10 @@ func TestMysqlGetByID(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "email", "password", "name", "updated_at", "created_at"}).
-		AddRow("TEST_ID", "test@test.com", "supersecret" ,"Mickie Mouse", time.Now(), time.Now())
+	rows := sqlmock.NewRows([]string{"id", "email", "name", "updated_at", "created_at"}).
+		AddRow("TEST_ID", "test@test.com", "Mickie Mouse", time.Now(), time.Now())
 
-	query := "SELECT id, email, password, name, created_at, updated_at FROM user WHERE id=\\?"
+	query := "SELECT id, email, name, created_at, updated_at FROM user WHERE id=\\?"
 
 	prep := mock.ExpectPrepare(query)
 	userID := "TEST_ID"

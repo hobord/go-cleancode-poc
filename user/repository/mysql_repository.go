@@ -5,7 +5,6 @@ import (
 	"database/sql"
 
 	uuid "github.com/google/uuid"
-
 	"github.com/hobord/go-cleancode-poc/models"
 	"github.com/hobord/go-cleancode-poc/user"
 )
@@ -33,7 +32,6 @@ func (m *mysqlUserRepo) getOne(ctx context.Context, query string, args ...interf
 	err = row.Scan(
 		&user.ID,
 		&user.Email,
-		&user.Password,
 		&user.Name,
 		&user.CreatedAt,
 		&user.UpdatedAt,
@@ -63,7 +61,6 @@ func (m *mysqlUserRepo) getMultiple(ctx context.Context, query string, args ...i
 		err := rows.Scan(
 			&user.ID,
 			&user.Email,
-			&user.Password,
 			&user.Name,
 			&user.CreatedAt,
 			&user.UpdatedAt,
@@ -82,12 +79,12 @@ func (m *mysqlUserRepo) getMultiple(ctx context.Context, query string, args ...i
 }
 
 func (m *mysqlUserRepo) GetByID(ctx context.Context, id string) (*models.User, error) {
-	query := `SELECT id, email, password, name, created_at, updated_at FROM user WHERE id=?`
+	query := `SELECT id, email, name, created_at, updated_at FROM user WHERE id=?`
 	return m.getOne(ctx, query, id)
 }
 
 func (m *mysqlUserRepo) List(ctx context.Context, listOptions models.ListOptions) ([]*models.User, error) {
-	query := `SELECT id, email, password, name, created_at, updated_at FROM user`
+	query := `SELECT id, email, name, created_at, updated_at FROM user`
 
 	query = query + listOptions.MysqlQueryStr()
 
