@@ -24,6 +24,8 @@ func (m *mysqlUserRepo) getOne(ctx context.Context, query string, args ...interf
 
 	stmt, err := m.DB.PrepareContext(ctx, query)
 	if err != nil {
+		// e := &Error{} // TODO:
+		// e.Err = err
 		return nil, err
 	}
 	row := stmt.QueryRowContext(ctx, args...)
