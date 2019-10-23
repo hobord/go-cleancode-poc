@@ -10,25 +10,25 @@ import (
 
 // GrpcServer for user usecases
 type GrpcServer struct {
-	userUscases user.Usecases
+	userUsecases user.Usecases
 }
 
 func (s *GrpcServer) getUseCases() user.Usecases {
-	return s.userUscases
+	return s.userUsecases
 }
 
 // CreateGrpcServer is a constructor for GrpcServer
-func CreateGrpcServer(userUscases user.Usecases) (*GrpcServer, error) {
-	if userUscases == nil {
+func CreateGrpcServer(userUsecases user.Usecases) (*GrpcServer, error) {
+	if userUsecases == nil {
 		return nil, errors.New("We need some user usecases")
 	}
 	return &GrpcServer{
-		userUscases: userUscases,
+		userUsecases: userUsecases,
 	}, nil
 }
 
 func (s *GrpcServer) GetByID(ctx context.Context, userIdMessage *UserIdMessage) (*User, error) {
-	u, err := s.userUscases.GetByID(ctx, userIdMessage.Id)
+	u, err := s.userUsecases.GetByID(ctx, userIdMessage.Id)
 
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (s *GrpcServer) Create(ctx context.Context, user *User) (*User, error) {
 		user.Email,
 		user.Name,
 	}
-	u, err := s.userUscases.Create(ctx, newUser)
+	u, err := s.userUsecases.Create(ctx, newUser)
 
 	if err != nil {
 		return nil, err
